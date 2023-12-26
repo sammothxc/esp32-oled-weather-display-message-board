@@ -32,12 +32,9 @@
 #define OTA              // Uncomment this line to enable OTA
 #define TZ 2               // Define timezone
 #define DST_MN 60          // Define daylight savings time
-String TOPIC = SECRET_TOPIC;        // MQTT topic
-String KEY = SECRET_API_KEY;        // OpenWeatherMap API key
-String MAP = SECRET_LOCATION_ID;    // OpenWeatherMap location ID
 String LANG = "en";        // OpenWeatherMap language
 boolean IS_METRIC = false; // Imperial: false, Metric: true
-const char* mqtt_server = "test.mosquitto.org";
+const char* mqtt_server = SECRET_SERVER;
 /////////////////////////////
 ///////// DEFINES ///////////
 /////////////////////////////
@@ -51,7 +48,7 @@ OpenWeatherMapCurrent wclient;
 OpenWeatherMapCurrentData data;
 WiFiClient espClient;
 PubSubClient client(espClient);
-String msg = "Mom's Messenger :)";
+String msg = " :)";
 bool new_message = false;
 bool night_mode = false;
 bool printed = false;
@@ -94,9 +91,9 @@ void callback(char* topic, byte* payload, unsigned int length) {
 void reconnect() {
   while (!client.connected()) {
     char clientid[25];
-    snprintf(clientid,25,"MomsMessenger");
+    snprintf(clientid, 25, SECRET_HOSTNAME);
     if (client.connect(clientid)) {
-      client.subscribe(TOPIC);
+      client.subscribe(SECRET_TOPIC);
     } else {
       delay(5000);
     }
@@ -134,7 +131,7 @@ void standby() {                                                // Standby mode
   #endif
   if(weather_timer + 1800 < (millis() / 1000)) {                // Check for weather every half hour
     weather_timer = millis() / 1000;
-    wclient.updateCurrentById(&data, KEY, MAP); 
+    wclient.updateCurrentById(&data, SECRET_API_KEY, SECRET_LOCATION_ID); 
   }
   if(oled_timer + 5 < (millis() / 1000) && not standby_msg) {
     oled_timer = millis() / 1000;
@@ -204,16 +201,16 @@ void setup() {
   display.setTextAlignment(TEXT_ALIGN_LEFT);
   display.setColor(WHITE);
   WiFiManager wifiManager;
-  wifiManager.autoConnect("MomsMessenger");
+  wifiManager.autoConnect(SECRET_HOSTNAME);
   #ifdef OTA
     ArduinoOTA.setPort(2580);
-    ArduinoOTA.setHostname("MomsMessenger");
-    ArduinoOTA.setPassword("samwise");
+    ArduinoOTA.setHostname(SECRET_HOSTNAME);
+    ArduinoOTA.setPassword(SECRET_PASSWORD);
     ArduinoOTA.begin();
   #endif
   wclient.setLanguage(LANG);
   wclient.setMetric(IS_METRIC);
-  wclient.updateCurrentById(&data, KEY, MAP);
+  wclient.updateCurrentById(&data, SECRET_API_KEY, SECRET_LOCATION_ID);
   client.setServer(mqtt_server, 1883);
   client.setCallback(callback);
   reconnect();
@@ -223,6 +220,7 @@ void setup() {
   display.drawStringMaxWidth(0,0,128,WiFi.localIP().toString());
   display.display();
   yield();
+  msg = SECRET_HOSTNAME + msg;
   delay(3000);
 }
 
