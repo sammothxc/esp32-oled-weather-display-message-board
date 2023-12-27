@@ -23,8 +23,7 @@ You will need the following libraries installed on your Arduino IDE or PlatformI
 - WiFiManager
 - ESP8266 Weather Station (even though it says ESP8266, it works with and is required for ESP32 as well)
 - Heltec ESP32 Dev-Boards (only if you are using a Heltec ESP32 board, it manages the OLED display and Lora chip on the board)
-
-You will also need to create a secrets.h file that contains your OpenWeatherMap API key and MQTT server details along with other required passwords and stuff.
+You will also need to create a secretfile.h and secretfile.py files that contains your OpenWeatherMap API key and MQTT server details along with other required passwords and stuff. I have included the template files for this (secretfile_example.h and secretfile.py) in their respective directories.
 
 ## Installation
 - Clone the repository to your local machine.
