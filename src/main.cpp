@@ -2,6 +2,7 @@
 //////////// TODO ///////////
 /////////////////////////////
 // - Add weather icons
+// - Fix MQTT publish message
 /////////////////////////////
 ///////// INCLUDES //////////
 /////////////////////////////
@@ -35,6 +36,7 @@
 String LANG = "en";        // OpenWeatherMap language
 boolean IS_METRIC = false; // Imperial: false, Metric: true
 const char* mqtt_server = SECRET_SERVER;
+//#define light_sensor      // Uncomment this line to enable the light sensor
 /////////////////////////////
 ///////// DEFINES ///////////
 /////////////////////////////
@@ -137,7 +139,6 @@ void standby() {                                                // Standby mode
     oled_timer = millis() / 1000;
     standby_msg = true;
     display.clear();
-    //Serial.printf("icon: %s\n", data.icon.c_str());
     display.setFont(ArialMT_Plain_10);
     display.drawString(0, 0, "Now: ");
     display.drawString(27, 0, data.main.c_str());
@@ -149,6 +150,7 @@ void standby() {                                                // Standby mode
     display.drawString(0, 48, "Hi/Lo: ");
     display.drawString(30, 48, String(int(round(data.tempMax))).c_str());
     display.drawString(47, 48, String(int(round(data.tempMin))).c_str());
+    //display.drawXbm(x, y, data.icon.c_str()); //future implementation of weather icons
   }
   if(oled_timer + 5 < (millis() / 1000) && standby_msg) {
     oled_timer = millis() / 1000;
@@ -227,14 +229,14 @@ void setup() {
 void loop() {
   client.loop();
   yield();
-  /*
-  if(analogRead(sensor) < light_threshold) {                    // If the light sensor is below the threshold, turn on the LED
-    night_mode = true;                                          // Set night mode to true
-  }
-  else {                                                        // If the light sensor is above the threshold, turn off the LED
-    night_mode = false;                                         // Set night mode to false
-  }
-  */
+  #ifdef light_sensor
+    if(analogRead(sensor) < light_threshold) {                    // If the light sensor is below the threshold, turn on the LED
+      night_mode = true;                                          // Set night mode to true
+    }
+    else {                                                        // If the light sensor is above the threshold, turn off the LED
+      night_mode = false;                                         // Set night mode to false
+    }
+  #endif
   if(new_message) {                                             // If there is a new message, run new message function
     notify();
   }
