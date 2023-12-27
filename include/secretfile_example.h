@@ -1,0 +1,6 @@
+#define SECRET_API_KEY      "your_api_key"
+#define SECRET_LOCATION_ID  "your_location_id"
+#define SECRET_TOPIC        "your_topic_here"
+#define SECRET_HOSTNAME     "whatever_you_want_here"
+#define SECRET_PASSWORD     "your_password_here"
+#define SECRET_SERVER       "your.server.org"
