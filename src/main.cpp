@@ -19,7 +19,7 @@
 #include <time.h>
 #include <ESPmDNS.h>
 #include <PubSubClient.h>
-#include "secrets.h"
+#include "secretfile.h"
 //#include "images.h"
 /////////////////////////////
 ///////// CONFIGS ///////////
